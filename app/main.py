@@ -1,16 +1,16 @@
-from datetime import datetime
-from pathlib import Path
-from uuid import uuid4
+import logging
+import time
 
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.config import CALORIES, CONFIDENCE_THRESHOLD
-from app.config import INGREDIENTS
-from app.model_loader import predict_food
-from app.utils import preprocess_image
+from app.routers.predict import router as predict_router
 
 app = FastAPI()
+logger = logging.getLogger("food_calorie_backend")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,52 +18,39 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-UPLOADS_DIR = Path("uploads")
 
 
-@app.get("/")
-def home():
-    return {"message": "Food Calorie API Running 🚀"}
+@app.middleware("http")
+async def log_request_response(request: Request, call_next):
+    start_time = time.perf_counter()
+    response = await call_next(request)
+    latency_ms = (time.perf_counter() - start_time) * 1000
+    logger.info(
+        "%s %s status=%s latency_ms=%.2f",
+        request.method,
+        request.url.path,
+        response.status_code,
+        latency_ms,
+    )
+    return response
 
 
-@app.post("/predict")
-async def predict(file: UploadFile = File(...)):
-    UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+@app.exception_handler(HTTPException)
+async def http_exception_handler(_request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": exc.detail},
+    )
 
-    image_bytes = await file.read()
-    suffix = Path(file.filename or "").suffix.lower() or ".jpg"
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-    saved_name = f"{timestamp}_{uuid4().hex}{suffix}"
-    saved_path = UPLOADS_DIR / saved_name
-    saved_path.write_bytes(image_bytes)
 
-    try:
-        img = preprocess_image(image_bytes)
-    except Exception:
-        return {"error": "Invalid image file", "saved_file": str(saved_path)}
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(_request: Request, exc: Exception):
+    logger.exception("Unhandled API error: %s", exc)
+    return JSONResponse(
+        status_code=500,
+        content={"error": "Internal server error"},
+    )
 
-    food, confidence = predict_food(img)
-
-    if confidence < CONFIDENCE_THRESHOLD:
-        return {
-            "food": "unknown",
-            "ingredients": [],
-            "calories": "N/A",
-            "ingredient_total_calories": "N/A",
-            "confidence": round(confidence, 2),
-            "saved_file": str(saved_path),
-        }
-
-    calories = CALORIES.get(food, "N/A")
-    ingredients = [item["name"] for item in INGREDIENTS.get(food, [])]
-
-    return {
-        "food": food,
-        "ingredients": ingredients,
-        "calories": calories,
-        "ingredient_total_calories": calories,
-        "confidence": round(confidence, 2),
-        "saved_file": str(saved_path),
-    }
+app.include_router(predict_router)
 
 

@@ -1,0 +1,10 @@
+[
+  {
+    "image": "salad/salad_001.jpg",
+    "labels": ["lettuce", "tomato", "cucumber", "carrot", "salt", "black pepper"]
+  },
+  {
+    "image": "biriyani/biriyani_001.jpg",
+    "labels": ["rice", "onion", "tomato", "ginger", "garlic", "chili", "turmeric", "coriander", "oil"]
+  }
+]
