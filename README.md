@@ -21,6 +21,23 @@ The current model is set up for these labels:
 - salad
 - icecream
 - biriyani
+- pasta
+- noodles
+- chicken
+- fish
+- fries
+- sandwich
+- taco
+- samosa
+- momos
+- paneer
+- tandoori_chicken
+- sushi
+- steak
+- cake
+- waffle
+- oats
+- nuts
 
 ## Project Structure
 

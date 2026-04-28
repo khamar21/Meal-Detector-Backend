@@ -96,8 +96,8 @@ def main() -> None:
 
     final_count = count_images(output_dir)
     shutil.rmtree(temp_root, ignore_errors=True)
-    print(f"Final icecream images: {final_count}")
-
+    print(f"Final icecream images: {final_count}") 
+ 
 
 if __name__ == "__main__":
     main()
