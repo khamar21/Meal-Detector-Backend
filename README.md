@@ -57,7 +57,7 @@ The current model is set up for these labels:
 - `topup_biriyani.py` - class-specific dataset helper
 - `topup_icecream.py` - class-specific dataset helper
 
-## Requirements
+## REQUIRMENTS 
 
 Install the Python dependencies listed in `requirements.txt`:
 
