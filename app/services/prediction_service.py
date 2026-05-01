@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from fastapi import HTTPException
 
 from app.config import CACHE_TTL_SECONDS, CALORIES, CONFIDENCE_THRESHOLD
-from app.config import INGREDIENT_CONFIDENCE_THRESHOLD, INGREDIENTS, NUTRITION_DB
+from app.config import INGREDIENT_CONFIDENCE_THRESHOLD, INGREDIENTS, NUTRITION_DB, HEALTHIER_ALTERNATIVES
 from app.model_loader import predict_food, predict_ingredients
 from app.utils import preprocess_image
 
@@ -130,3 +130,64 @@ async def get_prediction_payload(image_bytes: bytes) -> tuple[dict, bool]:
     }
     _cache_set(cache_key, payload)
     return payload, False
+
+
+def adjust_portion(original_calories: float, portion_multiplier: float, description: str = "") -> dict:
+    """Adjust calorie count based on portion size multiplier"""
+    if portion_multiplier <= 0:
+        raise HTTPException(status_code=400, detail="Portion multiplier must be positive")
+    
+    adjusted_calories = round(original_calories * portion_multiplier, 2)
+    
+    return {
+        "original_calories": original_calories,
+        "portion_multiplier": portion_multiplier,
+        "adjusted_calories": adjusted_calories,
+        "description": description or f"{portion_multiplier}x portion",
+        "message": f"Adjusted from {original_calories}kcal to {adjusted_calories}kcal",
+    }
+
+
+def get_healthier_alternatives(food: str, original_calories: float) -> dict:
+    """Get healthier food alternatives for a detected food"""
+    alternatives_data = HEALTHIER_ALTERNATIVES.get(food.lower(), [])
+    
+    alternatives = [
+        {
+            "name": alt["name"],
+            "calories": alt["calories"],
+            "reduction_percent": alt["reduction_percent"],
+            "benefits": alt["benefits"],
+        }
+        for alt in alternatives_data
+    ]
+    
+    return {
+        "detected_food": food,
+        "detected_food_calories": original_calories,
+        "alternatives": alternatives,
+        "message": f"Found {len(alternatives)} healthier alternatives for {food}",
+    }
+
+
+def adjust_nutrition_for_portion(nutrition: dict, portion_multiplier: float) -> dict:
+    """Adjust nutrition breakdown based on portion size"""
+    adjusted_nutrition = {
+        "totals": {
+            "calories": round(nutrition["totals"]["calories"] * portion_multiplier, 2),
+            "protein": round(nutrition["totals"]["protein"] * portion_multiplier, 2),
+            "carbs": round(nutrition["totals"]["carbs"] * portion_multiplier, 2),
+            "fat": round(nutrition["totals"]["fat"] * portion_multiplier, 2),
+        },
+        "by_ingredient": [
+            {
+                "name": item["name"],
+                "calories": round(item["calories"] * portion_multiplier, 2),
+                "protein": round(item["protein"] * portion_multiplier, 2),
+                "carbs": round(item["carbs"] * portion_multiplier, 2),
+                "fat": round(item["fat"] * portion_multiplier, 2),
+            }
+            for item in nutrition["by_ingredient"]
+        ],
+    }
+    return adjusted_nutrition

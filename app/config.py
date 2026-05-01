@@ -248,6 +248,164 @@ NUTRITION_DB = {
 	"honey or sugar": {"calories": 60, "protein": 0.0, "carbs": 16.0, "fat": 0.0},
 	"fruits and nuts": {"calories": 50, "protein": 1.5, "carbs": 8.0, "fat": 1.5},}
 
+# Healthier alternatives for each food with calorie reduction and benefits
+HEALTHIER_ALTERNATIVES = {
+	"pizza": [
+		{
+			"name": "Cauliflower crust pizza",
+			"calories": 150,
+			"reduction_percent": 40,
+			"benefits": ["Lower carbs", "More fiber", "Lower calories"],
+		},
+		{
+			"name": "Whole wheat pizza",
+			"calories": 220,
+			"reduction_percent": 25,
+			"benefits": ["More fiber", "Complex carbs"],
+		},
+	],
+	"burger": [
+		{
+			"name": "Grilled chicken burger",
+			"calories": 320,
+			"reduction_percent": 40,
+			"benefits": ["Lean protein", "Lower fat"],
+		},
+		{
+			"name": "Veggie burger",
+			"calories": 240,
+			"reduction_percent": 55,
+			"benefits": ["Plant-based", "High fiber", "Lower calories"],
+		},
+	],
+	"fries": [
+		{
+			"name": "Baked sweet potato fries",
+			"calories": 90,
+			"reduction_percent": 60,
+			"benefits": ["More nutrients", "Lower calories", "Good carbs"],
+		},
+		{
+			"name": "Air-fried regular fries",
+			"calories": 120,
+			"reduction_percent": 45,
+			"benefits": ["Less oil", "Lower fat"],
+		},
+	],
+	"icecream": [
+		{
+			"name": "Greek yogurt frozen dessert",
+			"calories": 100,
+			"reduction_percent": 60,
+			"benefits": ["High protein", "Probiotics", "Lower sugar"],
+		},
+		{
+			"name": "Fruit sorbet",
+			"calories": 95,
+			"reduction_percent": 62,
+			"benefits": ["Natural fruit", "Lower fat", "Antioxidants"],
+		},
+	],
+	"cake": [
+		{
+			"name": "Almond flour cake",
+			"calories": 180,
+			"reduction_percent": 45,
+			"benefits": ["Lower carbs", "Higher protein"],
+		},
+		{
+			"name": "Whole wheat cake",
+			"calories": 200,
+			"reduction_percent": 40,
+			"benefits": ["More fiber", "Whole grains"],
+		},
+	],
+	"pasta": [
+		{
+			"name": "Whole wheat pasta",
+			"calories": 200,
+			"reduction_percent": 35,
+			"benefits": ["More fiber", "Complex carbs"],
+		},
+		{
+			"name": "Zucchini noodles",
+			"calories": 60,
+			"reduction_percent": 80,
+			"benefits": ["Very low calorie", "More vegetables", "Low carb"],
+		},
+	],
+	"noodles": [
+		{
+			"name": "Brown rice noodles",
+			"calories": 160,
+			"reduction_percent": 25,
+			"benefits": ["Whole grain", "More nutrients"],
+		},
+		{
+			"name": "Vegetable noodles",
+			"calories": 100,
+			"reduction_percent": 60,
+			"benefits": ["Low carb", "More veggies"],
+		},
+	],
+	"samosa": [
+		{
+			"name": "Baked samosa",
+			"calories": 180,
+			"reduction_percent": 35,
+			"benefits": ["Less oil", "Lower fat"],
+		},
+		{
+			"name": "Vegetable spring roll",
+			"calories": 120,
+			"reduction_percent": 60,
+			"benefits": ["Lighter wrapper", "More veggies"],
+		},
+	],
+	"waffle": [
+		{
+			"name": "Whole grain waffle",
+			"calories": 180,
+			"reduction_percent": 30,
+			"benefits": ["More fiber", "Complex carbs"],
+		},
+		{
+			"name": "Protein waffle",
+			"calories": 160,
+			"reduction_percent": 40,
+			"benefits": ["High protein", "Satisfying"],
+		},
+	],
+	"steak": [
+		{
+			"name": "Lean grilled steak",
+			"calories": 180,
+			"reduction_percent": 45,
+			"benefits": ["Lean cut", "Lower fat"],
+		},
+		{
+			"name": "Grilled salmon",
+			"calories": 200,
+			"reduction_percent": 40,
+			"benefits": ["Omega-3", "Heart healthy"],
+		},
+	],
+	"sandwich": [
+		{
+			"name": "Whole wheat sandwich",
+			"calories": 280,
+			"reduction_percent": 30,
+			"benefits": ["More fiber", "Whole grain"],
+		},
+		{
+			"name": "Lettuce wrap sandwich",
+			"calories": 200,
+			"reduction_percent": 60,
+			"benefits": ["Low carb", "Low calorie"],
+		},
+	],
+}
+
 CONFIDENCE_THRESHOLD = 0.6
 INGREDIENT_CONFIDENCE_THRESHOLD = 0.5
 ALLOWED_IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
